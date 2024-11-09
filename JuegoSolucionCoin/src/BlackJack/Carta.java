@@ -1,4 +1,4 @@
-package solucionCoin.BlackJack;
+package BlackJack;
 
 
 public class Carta {
@@ -25,11 +25,11 @@ public class Carta {
     // Método para obtener el símbolo del palo
     private String obtenerSimbolo() {
         return switch (palo) {
-            case "C" -> "♥";
-            case "D" -> "♦";
-            case "P" -> "♠";
-            case "T" -> "♣";
-            default -> "?";
+            case "C" -> " ♥ ";
+            case "D" -> " ♦ ";
+            case "P" -> " ♠ ";
+            case "T" -> " ♣ ";
+            default -> " ? ";
         };
     }
 
@@ -50,7 +50,7 @@ public class Carta {
                 "┌─────────┐",
                 "│ " + valorAjustado + "      │",
                 "│         │",
-                "│    " + simbolo + "    │",
+                "│   " + simbolo + "   │",
                 "│         │",
                 "│       " + valorAjustado + "│",
                 "└─────────┘"

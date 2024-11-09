@@ -1,13 +1,11 @@
-
 package BlackJack;
-
 import solucionCoin.Juego;
 import solucionCoin.Jugador;
 import solucionCoin.Utilidades;
+
 import java.util.Scanner;
 
-public class BlackJack extends Juego{
-    
+public class BlackJack extends Juego {
     private Mazo mazo;
     private Mano manoJugador;
     private Mano manoCrupier;
@@ -15,7 +13,6 @@ public class BlackJack extends Juego{
     private Jugador jugadorBJ;
 
     Scanner scanner = new Scanner(System.in);
-    Utilidades util = new Utilidades();
 
     // Constructor
     public BlackJack(Jugador jugador) {
@@ -26,76 +23,92 @@ public class BlackJack extends Juego{
         jugadorBJ = jugador;
     }
 
-
+    // Método para iniciar el menu del juego
     @Override
     public void iniciarJuego() {
         cargando();
         System.out.print("Bienvenido al Juego de Black Jack");
         int opcion;
         do{
-            System.out.println("\nSeleccione una opcion: ");
+            System.out.println("...:::MENU BLACKJACK:::...");
+            System.out.println("");
             System.out.println("""
                     1 - Jugar
                     2 - Ingresar Dinero
                     3 - Consultar Saldo
                     4 - Salir
                     """);
+
+            System.out.print("Seleccione una opcion: ");
             opcion = Integer.parseInt(scanner.nextLine());
 
             switch (opcion) {
                 case 1:
-                    apostar();
+                    if (jugadorBJ.getPlata() > 0){
+                        apostar();
+                    }else{
+                        Utilidades.imprimirSeparador();
+                        System.out.println("Debe ingresar dinero para poder apostar. ");
+                        Utilidades.imprimirSeparador();
+                    }
                     break;
                 case 2:
-                    System.out.print("\nDigite el monto que desea ingresar ");
-                    jugadorBJ.setPlata(Double.parseDouble(scanner.nextLine()));
+                    System.out.print("\nDigite el monto que desea ingresar :");
+                    double ingreso = Double.parseDouble(scanner.nextLine());
+                    if (ingreso >0){
+                        jugadorBJ.setPlata(ingreso);
+                    }else {
+                        Utilidades.imprimirSeparador();
+                        System.out.println("Debe ingresar un monto valido.");
+                        Utilidades.imprimirSeparador();
+                    }
                     break;
                 case 3:
-                    System.out.print(jugadorBJ.getNombre()+ " Tienes el saldo de $" + jugadorBJ.getPlata());
+                    Utilidades.imprimirSeparador();
+                    System.out.println(jugadorBJ.getNombre()+ " Tienes el saldo de : $" + jugadorBJ.getPlata());
+                    Utilidades.imprimirSeparador();
                     break;
                 case 4:
                     System.out.println("Hasta luego..");
                     break;
                 default:
+                    Utilidades.imprimirSeparador();
                     System.out.println("Opcion no valida");
+                    Utilidades.imprimirSeparador();
             }
         }
         while (opcion != 4);
     }
 
-    // Método para iniciar el juego
+    // Método para iniciar la apuesta
     @Override
     public void apostar() {
-        if (jugadorBJ.getPlata() == 0){
-            System.out.print("Debe ingresar dinero para poder apostar. ");
+        System.out.print("Ingresa tu apuesta: ");
+        apuesta = scanner.nextDouble();
+        scanner.nextLine(); // Limpiar el buffer
 
-        }else{
-            System.out.print("Ingresa tu apuesta: ");
-            apuesta = scanner.nextDouble();
-            scanner.nextLine(); // Limpiar el buffer
+        if (apuesta> jugadorBJ.getPlata()){
+            Utilidades.imprimirSeparador();
+            System.out.print("No tiene suficiente dinero para poder realizar esta apuesta. ");
+            Utilidades.imprimirSeparador();
+        } else {
+            // Repartir cartas iniciales
+            repartirCartasIniciales();
 
-            if (apuesta> jugadorBJ.getPlata()){
-                System.out.print("No tiene suficiente dinero para poder realizar esta apuesta. ");
-            } else {
-                // Repartir cartas iniciales
-                repartirCartasIniciales();
+            // Mostrar las manos iniciales
+            Mano.mostrarManos(manoJugador, manoCrupier, false);
 
-                // Mostrar las manos iniciales
-                Mano.mostrarManos(manoJugador, manoCrupier, false);
+            // Turno del jugador
+            turnoJugador();
 
-                // Turno del jugador
-                turnoJugador();
-
-                // Turno del crupier
-                if (!manoJugador.sePasoDe21()) {
-                    turnoCrupier();
-                }
-
-                // Determinar ganador
-                determinarGanador();
+            // Turno del crupier
+            if (!manoJugador.sePasoDe21()) {
+                turnoCrupier();
             }
-        }
 
+            // Determinar ganador
+            determinarGanador();
+        }
     }
 
     private void repartirCartasIniciales() {
@@ -107,29 +120,44 @@ public class BlackJack extends Juego{
 
     private void turnoJugador() {
         boolean jugadorSePlanta = false;
-        while (!jugadorSePlanta && !manoJugador.sePasoDe21()) {
-            System.out.print("""
-                    Elija una opcion
+        if(manoJugador.tieneBlackJack()) {
+            blackJackWins();
+            ganarApuesta(apuesta);
+        }else{
+            while (!jugadorSePlanta && !manoJugador.sePasoDe21()) {
+                System.out.print("""
+                    MENU DEL JUGADOR:
                         1- Pedir una carta
                         2- Plantarse
                     """);
-            int respuesta = Integer.parseInt(scanner.nextLine());
-            if (respuesta==1) {
-                util.imprimirSeparador();
-                manoJugador.agregarCarta(mazo.repartirCarta());
-                Mano.mostrarManos(manoJugador, manoCrupier, false);
-            } else {
-                jugadorSePlanta = true;
+                System.out.print("Ingresa tu elección: ");
+                int respuesta = Integer.parseInt(scanner.nextLine());
+
+                switch (respuesta){
+                    case 1:
+                        Utilidades.imprimirSeparador();
+                        manoJugador.agregarCarta(mazo.repartirCarta());
+                        Mano.mostrarManos(manoJugador, manoCrupier, false);
+                        break;
+                    case 2:
+                        jugadorSePlanta = true;
+                        break;
+                    default:
+                        Utilidades.imprimirSeparador();
+                        System.out.println("Digite una opción valida.");
+                        Utilidades.imprimirSeparador();
+                }
             }
         }
+
     }
 
     private void turnoCrupier() {
-        util.limpiarPantalla();
-        util.imprimirSeparador();
+        Utilidades.limpiarPantalla();
+
         while (manoCrupier.getValorMano() <= 16) {
             System.out.println("el crupier esta tomando una carta");
-            util.pausar(1000);
+            Utilidades.pausar(1000);
             manoCrupier.agregarCarta(mazo.repartirCarta());
         }
         Mano.mostrarManos(manoJugador, manoCrupier, true);
@@ -142,43 +170,44 @@ public class BlackJack extends Juego{
         if (valorJugador > 21) {
             System.out.println("¡Te has pasado de 21! Perdiste.");
             perderApuesta(apuesta);
-            manoJugador.limpiarMano();
-            manoCrupier.limpiarMano();
         } else if (valorCrupier > 21) {
             System.out.println("¡El crupier se ha pasado de 21! Has ganado.");
             ganarApuesta(apuesta);
-            manoJugador.limpiarMano();
-            manoCrupier.limpiarMano();
+
         } else if (valorJugador == valorCrupier) {
             System.out.println("Empate.");
             empatar();
-            manoJugador.limpiarMano();
-            manoCrupier.limpiarMano();
+
         } else if (valorJugador > valorCrupier) {
             System.out.println("¡Has ganado!");
             ganarApuesta(apuesta);
-            manoJugador.limpiarMano();
-            manoCrupier.limpiarMano();
         } else {
             System.out.println("Has perdido.");
             perderApuesta(apuesta);
-            manoJugador.limpiarMano();
-            manoCrupier.limpiarMano();
+
         }
+        manoJugador.limpiarMano();
+        manoCrupier.limpiarMano();
     }
 
     private void ganarApuesta(double apuesta) {
-        jugadorBJ.setPlata(this.apuesta);
-        System.out.println("Has ganado $" + this.apuesta * 2 + ".");
+        jugadorBJ.setPlata(apuesta);
+        Utilidades.imprimirSeparador();
+        System.out.println("Has ganado $" + apuesta*2);
+        Utilidades.imprimirSeparador();
     }
 
     private void perderApuesta(double apuesta) {
-        jugadorBJ.setPlata(this.apuesta*-1);
+        jugadorBJ.setPlata(-apuesta);
+        Utilidades.imprimirSeparador();
         System.out.println("Has perdido $" + apuesta + ".");
+        Utilidades.imprimirSeparador();
     }
 
     private void empatar() {
+        Utilidades.imprimirSeparador();
         System.out.println("Tu apuesta de $" + apuesta + " te ha sido devuelta.");
+        Utilidades.imprimirSeparador();
     }
 
     private void cargando(){
@@ -200,9 +229,27 @@ public class BlackJack extends Juego{
                 """
         );
 
-        util.pausar(2000);
-        util.limpiarPantalla();
+        Utilidades.pausar(2000);
+        Utilidades.limpiarPantalla();
 
     }
-    
+
+    private void blackJackWins(){
+        System.out.println(
+                """
+        
+                !  ██████╗ ██╗      █████╗  ██████╗██╗  ██╗     ██╗ █████╗  ██████╗██╗  ██╗
+                !  ██╔══██╗██║     ██╔══██╗██╔════╝██║ ██╔╝     ██║██╔══██╗██╔════╝██║ ██╔╝
+                !  ██████╔╝██║     ███████║██║     █████╔╝      ██║███████║██║     █████╔╝
+                !  ██╔══██╗██║     ██╔══██║██║     ██╔═██╗ ██   ██║██╔══██║██║     ██╔═██╗
+                !  ██████╔╝███████╗██║  ██║╚██████╗██║  ██╗╚█████╔╝██║  ██║╚██████╗██║  ██╗
+                !  ╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝  
+                """
+        );
+
+        Utilidades.pausar(1000);
+
+    }
+
+
 }

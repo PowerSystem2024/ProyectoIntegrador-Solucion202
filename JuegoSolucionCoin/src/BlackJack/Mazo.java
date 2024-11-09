@@ -1,4 +1,4 @@
-package solucionCoin.BlackJack;
+package BlackJack;
 
 public class Mazo {
     private Carta[] mazo;
@@ -52,21 +52,11 @@ public class Mazo {
     public Carta repartirCarta() {
         // Verifica si quedan cartas en el mazo
         if (cartasUsadas == 52) {
-            reiniciarMazo();
+            mezclarMazo();
             repartirCarta();
         }
         cartasUsadas++;
         return mazo[cartasUsadas - 1];
     }
 
-    // Método para reiniciar el mazo
-    public void reiniciarMazo() {
-        cartasUsadas = 0;
-        mezclarMazo();
-    }
-
-    // Método para saber cuántas cartas quedan
-    public int cartasRestantes() {
-        return 52 - cartasUsadas;
-    }
 }

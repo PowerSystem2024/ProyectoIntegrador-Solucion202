@@ -1,4 +1,4 @@
-package solucionCoin.BlackJack;
+package BlackJack;
 
 public class Mano {
     private Carta[] cartas;

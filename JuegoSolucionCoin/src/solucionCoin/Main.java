@@ -1,12 +1,10 @@
-
 package solucionCoin;
-
-//import juegosolucioncoin.BlackJack.BlackJack;
 //import solucionCoin.AdivinanzasAnimales.AdivinanzasAnimales;
-//import solucionCoin.Jugador;
+import BlackJack.BlackJack;
+
 import java.util.Scanner;
 
-public class JuegoSolucionCoin {
+public class Main {
 
     public static void main(String[] args) {
 
@@ -35,10 +33,9 @@ public class JuegoSolucionCoin {
 
             switch (opcion) {
                 case 1:
-                    //BlackJack blackJack = new BlackJack(jugador);
-                    //blackJack.iniciarJuego();
+                    BlackJack blackJack = new BlackJack(jugador);
+                    blackJack.iniciarJuego();
                     break;
-
                 case 2:
                     System.out.println("ruleta " + jugador.getPlata());
                     break;

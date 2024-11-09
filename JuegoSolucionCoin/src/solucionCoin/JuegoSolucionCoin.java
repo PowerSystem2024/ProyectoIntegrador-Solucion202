@@ -1,9 +1,10 @@
-
 package solucionCoin;
 
 //import juegosolucioncoin.BlackJack.BlackJack;
 //import solucionCoin.AdivinanzasAnimales.AdivinanzasAnimales;
 //import solucionCoin.Jugador;
+import jackpot.Jackpot;
+
 import java.util.Scanner;
 
 public class JuegoSolucionCoin {
@@ -54,6 +55,7 @@ public class JuegoSolucionCoin {
                     break;
                 case 6:
                     System.out.println("JackPot");
+                    Jackpot.jugar(jugador);
                     break;
                 case 7:
                     if (jugador.getPlata() > 0) {

@@ -1,20 +1,23 @@
+package jackpot;
 import java.util.Random;
 import java.util.Scanner;
 
+import solucionCoin.Jugador;
+
 public class Jackpot {
-    public static void main(String[] args) {
-        int plata = 100; // Puedes establecer un valor inicial para la plata
+    public static void jugar(Jugador jugador) {
+        //int plata = 100; // Puedes establecer un valor inicial para la plata
         int desicion = 1; // Variable para decidir si se continúa jugando
         Random random = new Random();
 
         System.out.println("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
         System.out.println("Bienvenido al JackPot 202");
-        System.out.println("°°°°°°°°°°°°°°°°°°°°°°°°®");
+        System.out.println("°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°");
 
         // Uso de try-with-resources para asegurar que el Scanner se cierre automáticamente
         try (Scanner scanner = new Scanner(System.in)) {
             while (desicion != 2) {
-                if (plata < 1) {
+                if (jugador.getPlata() < 1) {
                     System.out.println("No tiene suficiente dinero para jugar");
                     do {
                         System.out.println("¿Quiere ingresar dinero? S=1 N=2");
@@ -24,8 +27,8 @@ public class Jackpot {
                             case 1 -> {
                                 System.out.println("Ingrese monto:");
                                 int creditoin = scanner.nextInt();
-                                plata += creditoin;
-                                System.out.println("Tienes " + plata + " plata");
+                                jugador.setPlata(creditoin);
+                                System.out.println("Tienes " + jugador.getPlata() + " plata");
                             }
                             case 2 -> System.out.println("Gracias por jugar, adiós");
                             default -> System.out.println("Elección no válida!");
@@ -33,8 +36,8 @@ public class Jackpot {
                     } while (desicion != 1 && desicion != 2);
                 } else {
                     boolean seguirJugando = true;
-                    while (plata > 0 && seguirJugando) {
-                        System.out.print("Ingrese su apuesta (max " + plata + " plata, 0 para salir): ");
+                    while (jugador.getPlata() > 0 && seguirJugando) {
+                        System.out.print("Ingrese su apuesta (max " + jugador.getPlata() + " plata, 0 para salir): ");
                         int apuesta = scanner.nextInt();
 
                         if (apuesta == 0) { // Permitir salir del juego con apuesta = 0
@@ -43,10 +46,10 @@ public class Jackpot {
                             break;
                         }
 
-                        if (apuesta > plata || apuesta < 1) {
-                            System.out.println("Apuesta inválida. Introduce una cantidad entre 1 y " + plata);
+                        if (apuesta > jugador.getPlata() || apuesta < 1) {
+                            System.out.println("Apuesta inválida. Introduce una cantidad entre 1 y " + jugador.getPlata());
                         } else {
-                            plata -= apuesta;
+                            jugador.setPlata(-apuesta);
                             int carrete1 = random.nextInt(9) + 1;
                             int carrete2 = random.nextInt(9) + 1;
                             int carrete3 = random.nextInt(9) + 1;
@@ -55,10 +58,10 @@ public class Jackpot {
 
                             if (carrete1 == carrete2 && carrete2 == carrete3) {
                                 int premio = random.nextInt(6) + 5; // Genera un premio entre 5 y 10
-                                plata += premio;
-                                System.out.println("¡Felicidades! ¡Has ganado " + premio + " plata!. Te queda " + plata + " plata");
+                                jugador.setPlata(premio);
+                                System.out.println("¡Felicidades! ¡Has ganado " + premio + " plata!. Te queda " + jugador.getPlata() + " plata");
                             } else {
-                                System.out.println("Lo siento, no has ganado esta vez. Tienes " + plata + " plata");
+                                System.out.println("Lo siento, no has ganado esta vez. Tienes " + jugador.getPlata() + " plata");
                             }
 
                             // Preguntar si desea volver a jugar
@@ -77,7 +80,7 @@ public class Jackpot {
                     }
                 }
             }
-            System.out.println("¡Juego terminado! Tienes " + plata + " plata");
+            System.out.println("¡Juego terminado! Tienes " + jugador.getPlata() + " plata");
             System.out.println("Gracias por jugar");
         }
     }

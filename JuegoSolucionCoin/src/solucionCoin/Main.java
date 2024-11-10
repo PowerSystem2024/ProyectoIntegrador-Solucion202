@@ -2,6 +2,9 @@ package solucionCoin;
 import AdivinanzasAnimales.AdivinanzasAnimales;
 import BlackJack.BlackJack;
 import acertijo.JuegoAcertijos;
+import JuegoDeDados.JugarDados;
+import jackpot.Jackpot;
+import ruleta.Ruleta;
 
 import java.util.Scanner;
 
@@ -38,10 +41,12 @@ public class Main {
                     blackJack.iniciarJuego();
                     break;
                 case 2:
-                    System.out.println("ruleta " + jugador.getPlata());
+                    Ruleta ruleta = new Ruleta(jugador);
+                    ruleta.apostar();
                     break;
                 case 3:
-                    System.out.println("JuegoDeDados ");
+                    JugarDados JuegoDeDados = new JugarDados(jugador);
+                    JuegoDeDados.iniciarJuego();
                     break;
                 case 4:
                     JuegoAcertijos acertijos = new JuegoAcertijos(jugador);
@@ -53,7 +58,8 @@ public class Main {
 
                     break;
                 case 6:
-                    System.out.println("JackPot");
+                    Jackpot jackpot = new Jackpot();
+                    jackpot.jugar(jugador);
                     break;
                 case 7:
                     if (jugador.getPlata() > 0) {

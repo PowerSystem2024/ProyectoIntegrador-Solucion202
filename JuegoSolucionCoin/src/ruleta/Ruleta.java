@@ -12,22 +12,36 @@ import java.util.Random;
 
 public class Ruleta {
 
-    static double plata;
-    static boolean apuesta;
-    Utilidades util1 = new Utilidades();
+    private double plata;
+    private boolean apuesta;
+    private Jugador jugadorRuleta;
 
-    public static void main(String[] args) {
+    public Ruleta(Jugador jugadorRuleta){
+        this.jugadorRuleta = jugadorRuleta;
+    }
+
+    public void apostar(){
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
 
         // Inicializar juego
         System.out.println("Bienvenido al juego de la ruleta");
-        System.out.println("Ingrese el dinero a apostar: ");
-        double plata1 = scanner.nextDouble();
-        plata = plata1;
+        System.out.println("Saldo :$" + jugadorRuleta.getPlata()); //prueba
+        while(jugadorRuleta.getPlata()<=0){
+            System.out.println("Ingrese el dinero para poder jugar: ");
+            double plataIngresada = scanner.nextDouble();
+            scanner.nextLine(); // limpiar el buffer
+            if (plataIngresada <0){
+                System.out.println("Ingrese un monto valido");
+            }else {
+                jugadorRuleta.setPlata(plataIngresada);
+            }
+        }
+
+
         apuesta = true;
 
-        while (apuesta && plata > 0) {
+        while (apuesta && jugadorRuleta.getPlata()> 0) {
             System.out.println("Menu de recomendaciones");
             System.out.println("   1. Apuesta simple");
             System.out.println("   2. Apuesta por color");
@@ -39,22 +53,28 @@ public class Ruleta {
 
             int numeroAleatorio = random.nextInt(36) + 1;
             String colorSalio = obtenerColor(numeroAleatorio);
+            int numeroApostado;
 
             switch (apuesta1) {
                 case 1:
                     System.out.println("Usted eligio apuesta simple");
-                    System.out.println("Ingrese el numero que desea apostar entre 1 y 36: ");
-                    int numeroApostado = scanner.nextInt();
+                    do {
+                        System.out.println("Ingrese el numero que desea apostar entre 1 y 36: ");
+                        numeroApostado = scanner.nextInt();
+                        scanner.nextLine(); // limpiar el buffer
+                    }while (numeroApostado >=36 && numeroApostado <0 );
+
                     System.out.println("Cuanto es el dinero a apostar?: ");
                     double plataApostado = scanner.nextDouble();
+                    scanner.nextLine(); // limpiar el buffer
 
-                    if (plataApostado <= plata) {
+                    if (plataApostado <= jugadorRuleta.getPlata()) {
                         if (numeroApostado == numeroAleatorio) {
                             System.out.println("Usted gano!!!");
-                            plata += plataApostado * 35;
+                            jugadorRuleta.setPlata(plataApostado*35);
                         } else {
                             System.out.println("Perdio!!");
-                            plata -= plataApostado;
+                            jugadorRuleta.setPlata(-plataApostado);
                             apuesta = false;
                         }
                     } else {
@@ -71,10 +91,13 @@ public class Ruleta {
 
                     if (colorSalio.equals(colorApostado)) {
                         System.out.println("Usted gano!!!");
-                        plata += plataApostado;
+//                        plata += plataApostado;
+                        jugadorRuleta.setPlata(plataApostado);
+
                     } else {
                         System.out.println("Perdio!!");
-                        plata -= plataApostado;
+                        jugadorRuleta.setPlata(-plataApostado);
+//                        plata -= plataApostado;
                     }
                     break;
 
@@ -96,10 +119,12 @@ public class Ruleta {
 
                             if (numeroAleatorio <= 12) {
                                 System.out.println("Usted gano!!!");
-                                plata += plataApostado * 2;
+//                                plata += plataApostado * 2;
+                                jugadorRuleta.setPlata(plataApostado * 2);
                             } else {
                                 System.out.println("Perdio!!");
-                                plata -= plataApostado;
+//                                plata -= plataApostado;
+                                jugadorRuleta.setPlata(-plataApostado);
                             }
                             break;
 
@@ -110,10 +135,12 @@ public class Ruleta {
 
                             if (numeroAleatorio >= 13 && numeroAleatorio <= 24) {
                                 System.out.println("Usted gano!!!");
-                                plata += plataApostado * 2;
+//                                plata += plataApostado * 2;
+                                jugadorRuleta.setPlata(plataApostado*2);
                             } else {
                                 System.out.println("Perdio!!");
-                                plata -= plataApostado;
+//                                plata -= plataApostado;
+                                jugadorRuleta.setPlata(-plataApostado);
                             }
                             break;
 
@@ -124,10 +151,12 @@ public class Ruleta {
 
                             if (numeroAleatorio >= 25 && numeroAleatorio <= 36) {
                                 System.out.println("Usted gano!!!");
-                                plata += plataApostado * 2;
+//                                plata += plataApostado * 2;
+                                jugadorRuleta.setPlata(plataApostado*2);
                             } else {
                                 System.out.println("Perdio!!");
-                                plata -= plataApostado;
+//                                plata -= plataApostado;
+                                jugadorRuleta.setPlata(-plataApostado);
                             }
                             break;
 
@@ -150,9 +179,10 @@ public class Ruleta {
                     System.out.println("Opcion no valida");
             }
 
-            System.out.println("Su plata actual es: $" + plata);
+            System.out.println("Su plata actual es: $" + jugadorRuleta.getPlata());
         }
     }
+
 
     static String obtenerColor(int numero) {
         int[] rojos = {1, 3, 5, 7, 9, 12, 14, 16, 18, 21, 23, 25, 27, 30, 32, 34, 36};

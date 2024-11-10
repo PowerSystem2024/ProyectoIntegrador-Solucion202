@@ -1,6 +1,7 @@
 package solucionCoin;
 import AdivinanzasAnimales.AdivinanzasAnimales;
 import BlackJack.BlackJack;
+import JuegoDeDados.JugarDados;
 
 import java.util.Scanner;
 
@@ -40,7 +41,8 @@ public class Main {
                     System.out.println("ruleta " + jugador.getPlata());
                     break;
                 case 3:
-                    System.out.println("JuegoDeDados ");
+                    JugarDados JuegoDeDados = new JugarDados(jugador);
+                    JuegoDeDados.iniciarJuego();
                     break;
                 case 4:
                     System.out.println("acertijos ");
